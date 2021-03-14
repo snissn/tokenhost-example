@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { useForm } from 'react-hook-form'
-import base from '../lib/db'
-import { auth } from '../lib/db'
+import {base} from '../lib/db'
 import * as firebase from 'firebase'
 
 import { useRouter } from 'next/router'
