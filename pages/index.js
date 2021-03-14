@@ -1,5 +1,4 @@
 import React, { Component, useEffect, useState } from 'react'
-import { firestore, base } from '../lib/db'
 import { fetchUserItems } from '../lib/utility'
 import KeyList from '../components/KeyList'
 
