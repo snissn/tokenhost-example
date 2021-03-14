@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import Link from 'next/link'
+import Link  from "next/link";
 import Router from 'next/router'
 import getConfig from 'next/config'
 import { auth } from '../lib/db'
@@ -49,36 +49,23 @@ export default class TheNav extends Component {
   render() {
     return (
       <nav className="navbar" role="navigation" aria-label="main navigation">
-        <div className="navbar-brand">
-          <a
-            role="button"
-            className="navbar-burger burger"
-            aria-label="menu"
-            aria-expanded="false"
-            data-target="navbarBasicExample"
-          >
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-          </a>
-        </div>
-
-        <div id="navbarBasicExample" className="navbar-menu">
-          <div className="navbar-start">
-            <Link href="/">
-              <a className="navbar-item">Home</a>
-            </Link>
-
-            {this.state.signedIn ? (
-              <Link href="/create">
-                <a className="navbar-item">Add Key</a>
-              </Link>
-            ) : null}
+        <div className="navbar-item is-pulled-left">
+          <Link href="/">
+            <a className="">
+              <img src="/TokenHost.png" />
+            </a>
+          </Link>
           </div>
+          
+        <div className="navbar-item is-pulled-left">
 
-          <div className="navbar-end">
-            <div className="navbar-item">
-              <div className="buttons">
+          {this.state.signedIn ? (
+            <Link href="/create">
+              <a className=" button is-warning">Add Key</a>
+            </Link>
+          ) : null}
+          </div>
+            <div className="navbar-item is-pulled-left">
                 {this.state.signedIn ? (
                   <a className="button is-danger" onClick={this.signOut}>
                     <strong>Sign out</strong>
@@ -90,9 +77,6 @@ export default class TheNav extends Component {
                     </a>
                   </Link>
                 )}
-              </div>
-            </div>
-          </div>
         </div>
       </nav>
     )
