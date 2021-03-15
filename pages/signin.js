@@ -4,6 +4,10 @@ import getConfig from 'next/config'
 import Router from 'next/router'
 import { auth, firebase, firestore } from '../lib/db'
 import { fetchDocumentFromCollectionByFieldName, isEmpty } from '../lib/utility'
+import { fetchUserItems } from '../lib/utility'
+import { base } from '../lib/db'
+
+import { generateKeys } from '../helpers/Web3Helper'
 
 const { publicRuntimeConfig } = getConfig()
 
@@ -29,7 +33,20 @@ export default class signin extends Component {
   componentWillUnmount() {
     this._isMounted = false
   }
-
+  createKey = () => {
+    const x = fetchUserItems('keys').then((keys) => {
+      if (!keys.length) {
+        const eth_account = generateKeys()
+        eth_account['userId'] = localStorage.getItem('USER')
+        eth_account[
+          'createdAt'
+        ] = firebase.firestore.FieldValue.serverTimestamp()
+        base.addToCollection('keys', eth_account).then(function () {
+          Router.push('/')
+        })
+      }
+    })
+  }
   authenticate = (provider) => {
     const authProvider = new firebase.auth[`${provider}AuthProvider`]()
     auth.signInWithPopup(authProvider).then((result) => {
@@ -40,12 +57,13 @@ export default class signin extends Component {
 
         photo: result.user.photoURL,
       }
-      console.log('do thing')
       this.authHandler(authUser)
     })
   }
 
   authHandler = (authUser) => {
+    localStorage.setItem('USER', authUser.uid)
+
     // check if user exists in users collection
     console.log('try thing ', authUser)
     fetchDocumentFromCollectionByFieldName({
@@ -60,13 +78,14 @@ export default class signin extends Component {
           .collection('users')
           .add(authUser)
           .then((createdUser) => {
-            localStorage.setItem('USER', authUser.uid)
-            Router.push('/')
+            this.createKey()
+            // Router.push('/')
           })
       } else {
         // if yes, go to home page
-        localStorage.setItem('USER', authUser.uid)
-        Router.push('/')
+        this.createKey()
+
+        // Router.push('/')
       }
     })
   }

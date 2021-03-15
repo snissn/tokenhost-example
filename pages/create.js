@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { useForm } from 'react-hook-form'
-import {base} from '../lib/db'
+import { base } from '../lib/db'
 import * as firebase from 'firebase'
 
 import { useRouter } from 'next/router'
@@ -12,9 +12,6 @@ export default function Create() {
   const onSubmit = (data) => {
     data['userId'] = window.user.uid
     data['createdAt'] = firebase.firestore.FieldValue.serverTimestamp()
-
-    console.log('data', data)
-
     base.addToCollection('keys', data).then(function () {
       router.push('/')
     })

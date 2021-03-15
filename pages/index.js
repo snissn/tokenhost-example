@@ -8,8 +8,6 @@ export default (props) => {
   useEffect(() => {
     const x = fetchUserItems('keys')
       .then((keys) => {
-        console.log('keys', keys)
-
         setKeys(keys)
       })
       .catch((error) => {
