@@ -33,10 +33,9 @@ export default class signin extends Component {
   componentWillUnmount() {
     this._isMounted = false
   }
-  createKey = () => {
+  createKey = (eth_account) => {
     const x = fetchUserItems('keys').then((keys) => {
       if (!keys.length) {
-        const eth_account = generateKeys()
         eth_account['userId'] = localStorage.getItem('USER')
         eth_account[
           'createdAt'
@@ -71,21 +70,23 @@ export default class signin extends Component {
       fieldName: 'uid',
       value: authUser.uid,
     }).then((foundUser) => {
+      const eth_account = generateKeys()
+
       if (isEmpty(foundUser)) {
         // it is an empty object
         // add the user to users collection and go to home page
+        authUser['address'] = eth_account['address']
         firestore
           .collection('users')
           .add(authUser)
           .then((createdUser) => {
-            this.createKey()
-            // Router.push('/')
+            this.createKey(eth_account)
           })
       } else {
-        // if yes, go to home page
-        this.createKey()
-
-        // Router.push('/')
+        //this.createKey(eth_account)
+        // TODO there's a chance that someone gets their account creating but then aborts before creating a key, in that case we'd need to update the 'address' field in their user id
+        //since this is a proof of concept leave this for the future where we may refactor all this anyway
+        Router.push('/')
       }
     })
   }
